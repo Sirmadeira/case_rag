@@ -1,29 +1,59 @@
-# RAG – Assistente de IA Corporativo
 
-## Visão Geral
-Este projeto implementa um **agente de IA corporativo baseado em RAG (Retrieval-Augmented Generation)** sobre o tema **“IA em grandes empresas”**, com foco em qualidade, segurança e práticas de produção.  
+# Objetivo da prova
+• Construir um MVP funcional de RAG (Retrieval-Augmented Generation).
+• Demonstrar padrões de implantação enterprise (segurança, observabilidade, custo e escala).
+• Entregar avaliação mínima com métricas e recomendações
 
-## Arquitetura
-Uma solução RAG é composta por três etapas principais: **ingestão**, **recuperação** e **geração**.
+# Requisitos obrigatórios
+• Pipeline de ingestão e indexação (extração, chunking, embeddings, index).
+• API com endpoint /ask que retorne resposta, citações (fonte + trecho), confiança (heurística) e
+métricas (tokens/latência).
+• Filtro por permissão (ex.: user_role) no momento do retrieval.
+• Estratégia mínima anti-alucinação (se não houver evidência, responder 'não encontrei nos
+documentos fornecidos').
+• Avaliação automática usando o CSV (10 perguntas) com métricas e relatório.
+• Logs estruturados (JSON) e correlação por conversation_id.
+• Mínimo de segurança: mitigação de prompt injection e política de logs (evitar vazar conteúdo
+sensível)
 
-### 1. Ingestão e Indexação
-Os documentos fornecidos (PDF, Word e HTML) são processados utilizando bibliotecas Python específicas para:
-- Leitura do conteúdo
-- Fragmentação em *chunks*
-- Geração de embeddings vetoriais
+RAG (Retrieval, augmentation, generation) frameworks são complexas. Por isso, a abordagem adotada neste projeto é algorítmica e incremental, dividindo o problema em flows. E esses flows são divididos em passo-a-passos.
 
-Cada *chunk* é indexado de forma independente, preservando metadados como fonte e tipo de documento.
+## O flow número um é o mais simples, é o de ingerir os documentos empresariais.
 
-### 2. Banco de Vetores e Semantic Search
-O **ChromaDB** é utilizado como banco de vetores para:
-- Armazenamento dos embeddings
-- Execução da busca semântica baseada em similaridade vetorial
+### Step-by-step
+1.1 - O usuário me dá o documento, eu capturo.
+1.2 - Eu fatio ele
+1.3 - Eu "embedo" ele, converto o texto para algo que a maquina entende
+1.4 - Eu jogo no ChromaDB
+1.5 - O ChromaDB, indexa, guarda os dados e atual como o banco de vetores. E futuramente disponibiza a semantic search, jeito chique de dizer o texto,vulgo doc mais proximo. 
 
-A consulta do usuário é convertida em embedding e comparada com os embeddings indexados, retornando os trechos mais relevantes.
 
-### 3. Augmentation e Generation
-Os trechos recuperados são utilizados para enriquecer dinamicamente o prompt (*augmentation*).  
-A resposta final é gerada por uma **LLM**, com o fluxo orquestrado via **LangChain**, que atua apenas como camada de integração e comunicação de LLMs já disponiveis no mercado.
+## O flow número dois é o mais chato, é o que realmente faz o RAG por assim dizer. Ele seria oque faz a  recuperação augmentação e geração.
+
+### Step-by-step
+2.1 - O usuário me passa um prompt via uma U.I bem mediocre.
+2.2 - Eu embedo esse prompt.
+2.3 - Eu faço a semantic search  e pronto fiz o retrieval
+2.4 - Eu uso do langchain para me comunicar com uma das milhares de llms por ae. E gero uma versão melhorada do prompt, com os doc retornados da semantic search.
+2.5 - Pronto temos uma RAG
+
+
+
+
+Quando um usuário me passar o documento, independente do formato. Eu posso me utilizar do ChromaDB como uma MSE, que faz todo o processo de:
+- Embedding
+- Indexação
+- Ele também disponibiliza o semantic search 
+
+
+
+1 - Passo, definir a arquitetura do projeto. E stack
+1.0 - Uma RAG, precisa ingerir,indexar. Os documentos repassados, creio que vou ter que usar bibliotecas python para isso.
+1.1 - Vou precisar de uma vector embedding database. Vou usar (chromadb)
+1.2 - A semantic search também dá para ser feita em (chromadb).
+1.3 - A augmentação e a geração podem ser feitas no mesmo passo. Só pegar o prompt e retornar ele com a informação desejada posso usar (langchain comunicando com a llm)
+1.4 - V
+
 
 
 
