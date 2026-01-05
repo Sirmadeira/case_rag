@@ -1,20 +1,4 @@
 
-# Objetivo da prova
-• Construir um MVP funcional de RAG (Retrieval-Augmented Generation).
-• Demonstrar padrões de implantação enterprise (segurança, observabilidade, custo e escala).
-• Entregar avaliação mínima com métricas e recomendações
-
-# Requisitos obrigatórios
-• Pipeline de ingestão e indexação (extração, chunking, embeddings, index).
-• API com endpoint /ask que retorne resposta, citações (fonte + trecho), confiança (heurística) e
-métricas (tokens/latência).
-• Filtro por permissão (ex.: user_role) no momento do retrieval.
-• Estratégia mínima anti-alucinação (se não houver evidência, responder 'não encontrei nos
-documentos fornecidos').
-• Avaliação automática usando o CSV (10 perguntas) com métricas e relatório.
-• Logs estruturados (JSON) e correlação por conversation_id.
-• Mínimo de segurança: mitigação de prompt injection e política de logs (evitar vazar conteúdo
-sensível)
 
 RAG (Retrieval, augmentation, generation) frameworks são complexas. Por isso, a abordagem adotada neste projeto é algorítmica e incremental, dividindo o problema em flows. E esses flows são divididos em passo-a-passos.
 
